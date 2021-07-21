@@ -14,9 +14,14 @@ export interface IWord {
     text: string,
     times: number;
 }
+function randomInt(min: number, max: number) {
+    return Math.round(Math.random() * (max - min) + min);
+}
 
 export default function WordTable(props: WordTableProps) {
-    const [words, setWords] = useState<IWord[]>([{ text: "Palabra", times: 10 }])
+    let max= 1000;
+    let min =1;
+    const [words, setWords] = useState<IWord[]>([])
 
     useEffect(() => {
         props.onChange(words);
@@ -38,7 +43,7 @@ export default function WordTable(props: WordTableProps) {
                 }}
                 ></TWord>)}
             </Flex>
-            <HStack><Button colorScheme="blue" onClick={() => { setWords([...words, { text: "Palabra " + (words.length + 1), times: 1 }]) }}>Agregar palabra</Button></HStack>
+            <HStack><Button colorScheme="blue" onClick={() => { setWords([...words, { text: "Palabra " + (words.length + 1), times: randomInt(min,max) }]) }}>Agregar palabra</Button></HStack>
         </VStack>
     </Center>)
 }
@@ -53,12 +58,12 @@ export function TWord(props: TWordProps) {
 
 
     return (
-            <Grid backgroundColor="yellow.50" onContextMenu={(e) => {
+            <Grid backgroundColor="yellow.50" maxW={"300px"} onContextMenu={(e) => {
                 e.preventDefault()
                 if(props.onDelete){
                     props.onDelete();
                 }
-            }} borderRadius="md" border="1px solid" borderColor="blackAlpha.200" padding={1} gridTemplateColumns="1fr .2fr" marginY={1}>
+            }} borderRadius="md" border="1px solid" borderColor="blackAlpha.200" padding={1} gridTemplateColumns="1fr .5fr" marginY={1}>
                 <Input value={text} backgroundColor="white" onChange={(v) => {
                     if (props.onChange) {
                         setText(v.target.value);
