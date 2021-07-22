@@ -1,8 +1,8 @@
 import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Center, Editable, EditableInput, EditablePreview, Flex, Grid, HStack, Input, Popover, PopoverContent, PopoverTrigger, useDisclosure, useEditableControls, useOutsideClick, VStack, Wrap } from "@chakra-ui/react";
-import { useEffect, useRef,  useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UIPanel from "./UIPanel";
-import {CgAddR} from "react-icons/cg"
-import {AiOutlineDelete, AiOutlineMenu} from "react-icons/ai"
+import { CgAddR } from "react-icons/cg"
+import { AiOutlineCloudUpload, AiOutlineDelete, AiOutlineMenu } from "react-icons/ai"
 
 export interface WordTableProps {
     words?: IWord[];
@@ -58,46 +58,95 @@ function MenuWordTable(props: MenuWordTable) {
     let min = 1;
     return <HStack backgroundColor="blackAlpha.200" borderRadius="md" padding={2}>
         <Box padding={2}><AiOutlineMenu ></AiOutlineMenu></Box>
-        <Button margin={1} colorScheme="green" leftIcon={ <CgAddR></CgAddR>} onClick={() => { props.words.setWords([...props.words.words, { text: "Palabra " + (props.words.words.length + 1), times: randomInt(min, max) }]) }}>
-          {"Agregar palabra"}
+        <Button margin={1} colorScheme="green" leftIcon={<CgAddR></CgAddR>} onClick={() => { props.words.setWords([...props.words.words, { text: "Palabra " + (props.words.words.length + 1), times: randomInt(min, max) }]) }}>
+            {"Agregar palabra"}
         </Button>
-       <MenuDeleteAll {...props}></MenuDeleteAll>
+        <MenuDeleteAll {...props}></MenuDeleteAll>
+        <UploadCSV {...props}></UploadCSV>
     </HStack>
 }
-function MenuDeleteAll(props:MenuWordTable){
+function UploadCSV(props: MenuWordTable) {
+    const refF = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+
+        const file = document.querySelector('.file') as HTMLInputElement;
+        if(file!=null){
+            console.log("Deleted")
+            file.value = ''
+        }
+        
+
+
+    }, [props.words.words])
+    return (<Box>
+       <form>
+       <Input type={"file"} className="file" ref={refF} accept={".CSV"} display={"none"} onChange={e => {
+
+            if (e.target.files) {
+                let file = e.target.files[0];
+                const reader = new FileReader()
+
+                reader.onload = function (evt) {
+                    let res: string = (evt.currentTarget as any).result;
+
+                    let spaces = res.split("\n")
+                    let ar = spaces.map(e => {
+                        let b = e.replace("\r", "").split(",");
+                        let word: IWord = { text: b[1], times: Number(b[0]) }
+                        return word;
+                    })
+                    props.words.setWords(ar);
+                }
+
+                reader.readAsText(file);
+
+
+            }
+
+        }} visibility={"hidden"}></Input>
+       </form>
+        <Button colorScheme={"whatsapp"} onClick={(e) => {
+            if (refF.current?.click) {
+                refF?.current?.click();
+            }
+
+        }} leftIcon={<AiOutlineCloudUpload />}>Subir archivo .CSV</Button>
+    </Box>)
+}
+function MenuDeleteAll(props: MenuWordTable) {
     const cancelRef = useRef(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
-    return (<><Button margin={1} colorScheme="red" leftIcon={ <AiOutlineDelete></AiOutlineDelete>} onClick={() => { onOpen()}}>
-    {"Eliminar todas las palabras"}
-  </Button>
-  <AlertDialog leastDestructiveRef={cancelRef}
-        motionPreset="slideInBottom"
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered
-      >
-        <AlertDialogOverlay />
+    return (<><Button margin={1} colorScheme="red" leftIcon={<AiOutlineDelete></AiOutlineDelete>} onClick={() => { onOpen() }}>
+        {"Eliminar todas las palabras"}
+    </Button>
+        <AlertDialog leastDestructiveRef={cancelRef}
+            motionPreset="slideInBottom"
+            onClose={onClose}
+            isOpen={isOpen}
+            isCentered
+        >
+            <AlertDialogOverlay />
 
-        <AlertDialogContent>
-          <AlertDialogHeader>¿Realmente deseas eliminar todas las palabras?</AlertDialogHeader>
-          <AlertDialogCloseButton />
-        
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              No
-            </Button>
-            <Button colorScheme="red" onClick={()=>{props.words.setWords([]); onClose()}} ml={3}>
-              Si
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-  </>)
+            <AlertDialogContent>
+                <AlertDialogHeader>¿Realmente deseas eliminar todas las palabras?</AlertDialogHeader>
+                <AlertDialogCloseButton />
+
+                <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                        No
+                    </Button>
+                    <Button colorScheme="red" onClick={() => { props.words.setWords([]); onClose() }} ml={3}>
+                        Si
+                    </Button>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    </>)
 }
 export function TWord(props: TWordProps) {
     const [text, setText] = useState(props.word.text);
     const [times, setTimes] = useState(props.word.times);
-    
+
 
     useEffect(() => {
         setTimes(props.word.times)

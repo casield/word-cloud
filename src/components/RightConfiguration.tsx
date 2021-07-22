@@ -1,4 +1,4 @@
-import { Flex, Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, HStack, Wrap } from "@chakra-ui/react";
+import { Flex, Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, HStack, Wrap, VStack, propNames, Input, Button, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Center, Divider } from "@chakra-ui/react";
 import { ReactElement, useState } from "react";
 import { AiOutlineBgColors, AiOutlineFontColors, AiOutlineFontSize } from "react-icons/ai";
 import { CgColorPicker } from 'react-icons/cg'
@@ -8,6 +8,9 @@ import { AppProps } from "../App";
 import UIPanel from "./UIPanel";
 import Gradient from "javascript-color-gradient";
 import { useEffect } from "react";
+import { SketchPicker } from "react-color";
+import { useCallback } from "react";
+import { exportComponentAsPDF, exportComponentAsPNG } from "react-component-export-image";
 
 
 export default function RightConfiguration(props: AppProps) {
@@ -18,9 +21,9 @@ export default function RightConfiguration(props: AppProps) {
             </Box>
             <Accordion marginTop={2} allowMultiple={false} overflow="auto" maxH="95%">
                 <ColoresItem {...props}></ColoresItem>
-                <FuenteItem></FuenteItem>
-                <ShapeItem></ShapeItem>
-                <ExportItem></ExportItem>
+                <FuenteItem {...props}></FuenteItem>
+                <ShapeItem {...props}></ShapeItem>
+                <ExportItem {...props}></ExportItem>
 
             </Accordion>
 
@@ -45,10 +48,13 @@ export function MenuItem(props: MenuItemProps) {
         <AccordionPanel>{props.children ? props.children : "..."}</AccordionPanel>
     </AccordionItem>)
 }
+export function SubMenuTitle(props: { children: string }) {
+    return <Box fontSize="sm" fontWeight="semibold" color="gray.500">{props.children}</Box>
+}
 
 export function ColoresItem(props: AppProps) {
 
-    let colors = [["#FFF800", "#8BC2E3"],["#731131", "#B1163C","#965F2F","#C19554","#E1CA9F"]]
+    let colors = [["#FFF800", "#8BC2E3"], ["#731131", "#B1163C", "#965F2F", "#C19554", "#E1CA9F"]]
     const [selected, setSelected] = useState<string[]>(colors[0])
 
 
@@ -65,12 +71,18 @@ export function ColoresItem(props: AppProps) {
         }
 
 
-    }, [props.words.words,selected])
+    }, [props.words.words, selected])
 
     return (<MenuItem title="Colores" icon={<CgColorPicker />}>
-        <Wrap>
-            {colors.map(c => <Color onClick={(c) => setSelected(c)} selected={JSON.stringify(c) == JSON.stringify(selected)} colors={c} ></Color>)}
-        </Wrap>
+        <VStack alignItems="start">
+            <SubMenuTitle>Color de la letra</SubMenuTitle>
+            <Wrap>
+                {colors.map(c => <Color onClick={(c) => setSelected(c)} selected={JSON.stringify(c) == JSON.stringify(selected)} colors={c} ></Color>)}
+            </Wrap>
+            <GradiantePersonalizado {...props}></GradiantePersonalizado>
+            <SubMenuTitle>Color de fondo</SubMenuTitle>
+        </VStack>
+
     </MenuItem>)
 }
 function Color(props: { colors: string[], selected: boolean, onClick: (c: string[]) => any }) {
@@ -86,15 +98,78 @@ function Color(props: { colors: string[], selected: boolean, onClick: (c: string
 
     return (<Box cursor="pointer" w={size} borderRadius="full" onClick={() => { props.onClick(props.colors) }} h={size} border={props.selected ? "2px" : "0px"} borderColor={props.selected ? "black" : "none"} background={"linear-gradient(to right," + deg + ")"}></Box>)
 }
-export function FuenteItem() {
+function GradiantePersonalizado(props: AppProps) {
+    const [color1, setColor1] = useState("#000000")
+    const [color2, setColor2] = useState("#BBFFFF")
+    const [active, setActive] = useState(false);
+
+    useEffect(() => {
+        if (active) {
+            let grad = new Gradient()
+            grad.setGradient(color1, color2);
+            grad.setMidpoint(props.words.words.length);
+            props.colors.setColors(grad.getArray())
+        }
+    }, [active, color1, color2])
+    const Col = useCallback((props: { color: string, setColor: React.Dispatch<React.SetStateAction<string>> }) => {
+        return <Popover>
+            <PopoverTrigger>
+                <Box border="2px" cursor="pointer" backgroundColor={props.color} w={size} h={size}></Box>
+            </PopoverTrigger>
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Selecciona un color</PopoverHeader>
+                <PopoverBody><SketchPicker color={props.color} onChange={(e) => { props.setColor(e.hex) }} /></PopoverBody>
+            </PopoverContent>
+        </Popover>
+    }, [])
+    let size = 5;
+    return (<>
+        <Divider></Divider>
+        {active && <Flex w="full" alignItems="center" justifyContent="center">
+
+            <Col color={color1} setColor={setColor1}></Col>
+            <Box w={"150px"} h={size - 2} background={"linear-gradient(to right," + color1 + "," + color2 + ")"}></Box>
+            <Col color={color2} setColor={setColor2}></Col>
+        </Flex>}
+
+        {<Center w="full"><Button size="sm" onClick={() => { setActive(!active) }} colorScheme="yellow">{!active ? "Colores personalizados" : "Cancelar"}</Button></Center>}
+    </>)
+}
+export function FuenteItem(props: AppProps) {
+    const fuentes = ["Calibri", "Arial", "New Times Roman"]
+
     return (<MenuItem title="Fuente" icon={<AiOutlineFontSize />}>
+        <VStack alignItems="start">
+            <SubMenuTitle>Tipo de fuente</SubMenuTitle>
+            <Wrap>{fuentes.map((e) => {
+                return (<Box border="1px" borderColor={props.font?.font == e ? "gray.600" : "gray.300"} padding={1} borderRadius="md" cursor="pointer" onClick={() => { props.font.setFont(e) }} fontWeight={props.font?.font == e ? "bold" : "normal"} fontFamily={e}>{e}</Box>)
+            })}</Wrap>
+            <SubMenuTitle>Tamaño máximo de la fuente</SubMenuTitle>
+            <Flex justifyContent="end">
+                <Input type={"number"} w="40%" value={props.fontSize.fontSize} onChange={(e) => { props.fontSize.setFontSize(e.target.valueAsNumber) }}></Input>
+                <Box h="full" marginLeft={1} fontSize="sm" color="gray.300" fontWeight="bold">pts.</Box>
+            </Flex>
+        </VStack>
     </MenuItem>)
 }
-export function ShapeItem() {
+export function ShapeItem(props: AppProps) {
+    const shapes = ["circle", "square", "star", "cardioid", "triangle-forward", "triangle", "pentagon"]
     return (<MenuItem title="Forma" icon={<IoShapesOutline />}>
+        <Wrap>
+            {shapes.map(e => (<Box border="1px" borderColor={props.shape?.shape == e ? "gray.600" : "gray.300"} padding={1} borderRadius="md" cursor="pointer" onClick={() => { props.shape.setShape(e) }} fontWeight={props.shape?.shape == e ? "bold" : "normal"} >{e}</Box>))}
+        </Wrap>
     </MenuItem>)
 }
-export function ExportItem() {
+export function ExportItem(props: AppProps) {
     return (<MenuItem title="Exportar" icon={<BiExport />}>
+      <VStack>
+      <Box><Button colorScheme="orange" onClick={() => {
+            let date = new Date();
+            let d = (date.getDay() + "-" + date.getMonth() + "-" + date.getFullYear());
+            exportComponentAsPNG(props.componentRef.componentRef, { fileName: ("WordCloud " + d), html2CanvasOptions: { backgroundColor: "transparent" } })
+        }}>Exportar como PNG</Button></Box>
+      </VStack>
     </MenuItem>)
 }

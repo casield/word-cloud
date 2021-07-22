@@ -15,11 +15,14 @@ export default function WordsDisplay(props: AppProps) {
     const [words, setWords] = useState<IWord[]>([])
     const ref = useRef<HTMLDivElement>(null)
     let containerSize = "65vh"
+    useEffect(()=>{
+        props.componentRef.setComponentRef(ref);
+    },[ref])
     useEffect(() => {
         let sorted = props.words.words
         setWords(sorted)
         Word(sorted);
-    }, [props.words.words, props.colors.colors])
+    }, [props.words.words, props.colors.colors,props.font.font,props.fontSize.fontSize,props.shape.shape])
     const Word = (words: IWord[]) => {
         if (ref.current != null) {
             let biggest = 0;
@@ -39,10 +42,7 @@ export default function WordsDisplay(props: AppProps) {
                 return [w.text, w.times]
             })
             let width = ref.current.offsetWidth;
-            let maxSize = 50;
-
-            console.log("...........", arr)
-
+            let maxSize = props.fontSize.fontSize;
             WordCloud(ref.current,
                 {
                     list: arr,
@@ -60,11 +60,11 @@ export default function WordsDisplay(props: AppProps) {
                         let index = words.findIndex(e => e.text == word);
                         return props.colors.colors[index]
                     },
-                    shape:"square",
-                    shuffle:false,
+                    shape:props.shape.shape,
+                    shuffle:true,
+                    fontFamily:props.font.font,
 
-                    rotateRatio: 0
-
+                    rotateRatio: 0,
 
                 })
             console.log("Word Cloud", ref.current.offsetWidth)
@@ -78,7 +78,10 @@ export default function WordsDisplay(props: AppProps) {
             }}
         >
 
-            <Box border="1px" position="relative" borderColor="blackAlpha.500" ref={ref} backgroundColor="white" h="full" w="full" borderRadius="md"></Box>
+            <Box border="1px" position="relative" overflow="hidden" borderColor="blackAlpha.500"
+              backgroundColor="white" h="full" w="full" borderRadius="md">
+                 <Box h="full" w="full" background="transparent" ref={ref}></Box>
+             </Box>
 
         </Resizable>
     </Flex>)
