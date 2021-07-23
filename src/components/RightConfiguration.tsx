@@ -175,10 +175,11 @@ export function FuenteItem(props: AppProps) {
             <Wrap>{fuentes.map((e) => {
                 return (<Box border="1px" borderColor={props.font?.font == e ? "gray.600" : "gray.300"} padding={1} borderRadius="md" cursor="pointer" onClick={() => { props.font.setFont(e) }} fontWeight={props.font?.font == e ? "bold" : "normal"} fontFamily={e}>{e}</Box>)
             })}</Wrap>
+            <Divider></Divider>
             <SubMenuTitle>Tamaño máximo de la fuente</SubMenuTitle>
             <Flex justifyContent="end">
                 <Input type={"number"} w="40%" value={props.fontSize.fontSize} onChange={(e) => { props.fontSize.setFontSize(e.target.valueAsNumber) }}></Input>
-                <Box h="full" marginLeft={1} fontSize="sm" color="gray.300" fontWeight="bold">pts.</Box>
+                <Box h="full" marginLeft={1} fontSize="sm" color="gray.700" fontWeight="bold">pts.</Box>
             </Flex>
         </VStack>
     </MenuItem>)
