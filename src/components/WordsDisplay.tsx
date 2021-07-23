@@ -22,7 +22,7 @@ export default function WordsDisplay(props: AppProps) {
         let sorted = props.words.words
         setWords(sorted)
         Word(sorted);
-    }, [props.words.words, props.colors.colors,props.font.font,props.fontSize.fontSize,props.shape.shape])
+    }, [props.words.words, props.colors.colors,props.font.font,props.fontSize.fontSize,props.shape.shape,props.bgColor.color])
     const Word = (words: IWord[]) => {
         if (ref.current != null) {
             let biggest = 0;
@@ -63,6 +63,7 @@ export default function WordsDisplay(props: AppProps) {
                     shape:props.shape.shape,
                     shuffle:true,
                     fontFamily:props.font.font,
+                    backgroundColor:props.bgColor.color,
 
                     rotateRatio: 0,
 

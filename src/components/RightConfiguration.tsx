@@ -54,7 +54,12 @@ export function SubMenuTitle(props: { children: string }) {
 
 export function ColoresItem(props: AppProps) {
 
-    let colors = [["#FFF800", "#8BC2E3"], ["#731131", "#B1163C", "#965F2F", "#C19554", "#E1CA9F"]]
+    let colors = [["#731131", "#B1163C", "#965F2F", "#C19554", "#E1CA9F"],
+    ["#FFFFFF","#000000"],
+    ["#FFF800", "#8BC2E3"],["#a8ff78","#78ffd6"],["#ee9ca7","#ffdde1"],
+    ["#ED213A","#93291E"],["#11998e","#38ef7d"],["#3C3B3F","#605C3C"],
+    ["#000000","#0f9b0f"],["#000046","#1CB5E0"],["#141E30","#243B55"]
+]
     const [selected, setSelected] = useState<string[]>(colors[0])
 
 
@@ -80,7 +85,15 @@ export function ColoresItem(props: AppProps) {
                 {colors.map(c => <Color onClick={(c) => setSelected(c)} selected={JSON.stringify(c) == JSON.stringify(selected)} colors={c} ></Color>)}
             </Wrap>
             <GradiantePersonalizado {...props}></GradiantePersonalizado>
+            <Divider></Divider>
             <SubMenuTitle>Color de fondo</SubMenuTitle>
+            <Wrap>
+                {colors.map(c=>c.map(x=>{
+                    return <Box w={"20px"} cursor="pointer" border={props.bgColor.color==x?"2px":"none"} onClick={()=>{props.bgColor.setColor(x)}} h="20px" backgroundColor={x}></Box>
+                }))}
+            </Wrap>
+            <BgColorPersonalizado {...props}></BgColorPersonalizado>
+            
         </VStack>
 
     </MenuItem>)
@@ -97,6 +110,22 @@ function Color(props: { colors: string[], selected: boolean, onClick: (c: string
 
 
     return (<Box cursor="pointer" w={size} borderRadius="full" onClick={() => { props.onClick(props.colors) }} h={size} border={props.selected ? "2px" : "0px"} borderColor={props.selected ? "black" : "none"} background={"linear-gradient(to right," + deg + ")"}></Box>)
+}
+function BgColorPersonalizado(props:AppProps){
+    const [active, setActive] = useState(false);
+    return (<>
+    <Popover>
+            <PopoverTrigger>
+              <Center w="full"> <Button colorScheme="yellow" size="sm">Seleccionar color</Button></Center>
+            </PopoverTrigger>
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Selecciona un color</PopoverHeader>
+                <PopoverBody><Center><SketchPicker color={props.bgColor.color} onChange={(e) => { props.bgColor.setColor(e.hex) }} /></Center></PopoverBody>
+            </PopoverContent>
+        </Popover>
+    </>)
 }
 function GradiantePersonalizado(props: AppProps) {
     const [color1, setColor1] = useState("#000000")
@@ -120,13 +149,13 @@ function GradiantePersonalizado(props: AppProps) {
                 <PopoverArrow />
                 <PopoverCloseButton />
                 <PopoverHeader>Selecciona un color</PopoverHeader>
-                <PopoverBody><SketchPicker color={props.color} onChange={(e) => { props.setColor(e.hex) }} /></PopoverBody>
+                <PopoverBody><Center><SketchPicker color={props.color} onChange={(e) => { props.setColor(e.hex) }} /></Center></PopoverBody>
             </PopoverContent>
         </Popover>
     }, [])
     let size = 5;
     return (<>
-        <Divider></Divider>
+    
         {active && <Flex w="full" alignItems="center" justifyContent="center">
 
             <Col color={color1} setColor={setColor1}></Col>
@@ -138,7 +167,7 @@ function GradiantePersonalizado(props: AppProps) {
     </>)
 }
 export function FuenteItem(props: AppProps) {
-    const fuentes = ["Calibri", "Arial", "New Times Roman"]
+    const fuentes = ["Calibri", "Arial", "New Times Roman","Courier New","Verdana","Georgia","Palatino","Bookman","Tahoma","Impact","Comic Sans MS",""]
 
     return (<MenuItem title="Fuente" icon={<AiOutlineFontSize />}>
         <VStack alignItems="start">

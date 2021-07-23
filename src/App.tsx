@@ -12,6 +12,7 @@ export interface AppProps {
  
   fontSize:{fontSize:number,setFontSize:React.Dispatch<React.SetStateAction<number>>}
   shape:{shape:string,setShape:React.Dispatch<React.SetStateAction<string>>}
+  bgColor:{color:string,setColor:React.Dispatch<React.SetStateAction<string>>}
   componentRef:{componentRef:React.RefObject<HTMLElement>,setComponentRef:React.Dispatch<React.SetStateAction<React.RefObject<HTMLElement>|undefined>>}
 }
 function App() {
@@ -19,6 +20,7 @@ function App() {
   const [colors, setColors] = useState<string[]>([])
   const [font,setFont] = useState<string>("Calibri");
   const [shape,setShape] = useState<string>("circle");
+  const [color,setColor] = useState<string>("#FFFFFF");
   const [fontSize,setFontSize] = useState<number>(50);
   const [componentRef,setComponentRef] = useState<React.RefObject<HTMLElement >|undefined>()
   
@@ -27,7 +29,8 @@ function App() {
   font:{font,setFont},
   fontSize:{fontSize,setFontSize},
   shape:{shape,setShape} ,
-  componentRef:{componentRef:componentRef as React.RefObject<HTMLElement>,setComponentRef}
+  componentRef:{componentRef:componentRef as React.RefObject<HTMLElement>,setComponentRef},
+  bgColor:{color,setColor}
 }
   return (
     <Grid templateColumns="1fr .2fr" minH="100vh"  backgroundColor={"gray.100"} maxW="100vw" maxH="100vh">
