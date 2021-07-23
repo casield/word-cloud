@@ -2,7 +2,7 @@
   "name": "word-cloud",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://drokt.com/wordcloud",
+  "homepage": "http://drokt.com/wordcloud/",
   "dependencies": {
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11",
