@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.f87bd0f8.chunk.css",
-    "main.js": "/static/js/main.fb676f7b.chunk.js",
-    "main.js.map": "/static/js/main.fb676f7b.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.d3065ec2.js",
-    "runtime-main.js.map": "/static/js/runtime-main.d3065ec2.js.map",
-    "static/js/2.c52e692b.chunk.js": "/static/js/2.c52e692b.chunk.js",
-    "static/js/2.c52e692b.chunk.js.map": "/static/js/2.c52e692b.chunk.js.map",
-    "static/js/3.b9c98437.chunk.js": "/static/js/3.b9c98437.chunk.js",
-    "static/js/3.b9c98437.chunk.js.map": "/static/js/3.b9c98437.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/main.f87bd0f8.chunk.css.map": "/static/css/main.f87bd0f8.chunk.css.map",
-    "static/js/2.c52e692b.chunk.js.LICENSE.txt": "/static/js/2.c52e692b.chunk.js.LICENSE.txt"
+    "main.css": "/wordcloud/static/css/main.f87bd0f8.chunk.css",
+    "main.js": "/wordcloud/static/js/main.fb676f7b.chunk.js",
+    "main.js.map": "/wordcloud/static/js/main.fb676f7b.chunk.js.map",
+    "runtime-main.js": "/wordcloud/static/js/runtime-main.3283989d.js",
+    "runtime-main.js.map": "/wordcloud/static/js/runtime-main.3283989d.js.map",
+    "static/js/2.c52e692b.chunk.js": "/wordcloud/static/js/2.c52e692b.chunk.js",
+    "static/js/2.c52e692b.chunk.js.map": "/wordcloud/static/js/2.c52e692b.chunk.js.map",
+    "static/js/3.b9c98437.chunk.js": "/wordcloud/static/js/3.b9c98437.chunk.js",
+    "static/js/3.b9c98437.chunk.js.map": "/wordcloud/static/js/3.b9c98437.chunk.js.map",
+    "index.html": "/wordcloud/index.html",
+    "static/css/main.f87bd0f8.chunk.css.map": "/wordcloud/static/css/main.f87bd0f8.chunk.css.map",
+    "static/js/2.c52e692b.chunk.js.LICENSE.txt": "/wordcloud/static/js/2.c52e692b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.d3065ec2.js",
+    "static/js/runtime-main.3283989d.js",
     "static/js/2.c52e692b.chunk.js",
     "static/css/main.f87bd0f8.chunk.css",
     "static/js/main.fb676f7b.chunk.js"
