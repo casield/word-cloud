@@ -178,7 +178,7 @@ export function FuenteItem(props: AppProps) {
             <Divider></Divider>
             <SubMenuTitle>Tamaño máximo de la fuente</SubMenuTitle>
             <Flex justifyContent="end">
-                <Input type={"number"} w="40%" value={props.fontSize.fontSize} onChange={(e) => { props.fontSize.setFontSize(e.target.valueAsNumber) }}></Input>
+                <Input type={"number"} w="40%" value={props.fontSize.fontSize} onChange={(e:any) => { props.fontSize.setFontSize(e.target.valueAsNumber) }}></Input>
                 <Box h="full" marginLeft={1} fontSize="sm" color="gray.700" fontWeight="bold">pts.</Box>
             </Flex>
         </VStack>
